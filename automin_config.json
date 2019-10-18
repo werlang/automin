@@ -1,0 +1,45 @@
+{
+    "path": {
+        "root": "/home/server/public_html",
+        "js": {
+            "dev": "script/dev",
+            "min": "script"
+        },
+        "css": {
+            "dev": "css/dev",
+            "min": "css"
+        }
+    },
+    "files": [{
+        "name": "index.php",
+        "js": {
+            "files": [
+                {"name": "index.js"},
+                {"name": "login.js"},
+                {"name": "header.js"}
+            ]
+        },
+        "css": {
+            "files": [
+                {"name": "index.css"},
+                {"name": "header.css"}
+            ]
+        }
+    },{
+        "name": "docs.php",
+        "js": {
+            "files": [
+                {"name": "docs.js"},
+                {"name": "side-menu.js"},
+                {"name": "header.js"}
+            ]
+        },
+        "css": {
+            "files": [
+                {"name": "docs.css"},
+                {"name": "header.css"},
+                {"name": "code.css"},
+            ]
+        }
+    }]
+}
