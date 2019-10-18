@@ -41,6 +41,11 @@ for h in config['files']:
     for k in ['css', 'js']:
 
         if mode == 'prod':
+            #move file to min folder
+            from_path = '{}/{}/{}.min.{}'.format(html_path, dev_path[k], html_name.split('.')[-2], k)
+            dest_path = '{}/{}/{}.min.{}'.format(html_path, min_path[k], html_name.split('.')[-2], k)
+            os.rename(from_path, dest_path)
+
             #insert prod script/link tag if does not exist
             if k == 'js':
                 pattern = r'<script src=\"{}\/{}\.min\.js\"><\/script>'.format(min_path[k], html_name.split('.')[-2])
@@ -52,11 +57,11 @@ for h in config['files']:
                 name = h[k]['files'][0]['name']
 
                 if k == 'js':
-                    pattern = r'<script[\w\s\=\-\/\"\']*?src=[\'\"]{}\/{}[\'\"][\w\s\=\-\/\"\'>]+?<\/script>'.format(dev_path[k], name)
-                    replace = "<script src=\"{}/{}.min.js\"></script>\n\t<script src=\"{}/{}\"></script>".format(min_path[k], html_name.split('.')[-2], dev_path[k], name)
+                    pattern = r'<script[\w\s\=\-\/\"\']*?src=[\'\"]{}\/{}[\'\"][\w\s\=\-\/\"\'>]+?<\/script>'.format(min_path[k], name)
+                    replace = "<script src=\"{}/{}.min.js\"></script>\n\t<script src=\"{}/{}\"></script>".format(min_path[k], html_name.split('.')[-2], min_path[k], name)
                 else:
-                    pattern = r'<link[\w\s\=\-\/\"\']*?href=[\'\"]{}\/{}[\'\"]\/>'.format(dev_path[k], name)
-                    replace = "<link rel='stylesheet' href=\"{}/{}.min.css\"/>\n\t<link rel='stylesheet' href=\"{}/{}\"/>".format(min_path[k], html_name.split('.')[-2], dev_path[k], name)
+                    pattern = r'<link[\w\s\=\-\/\"\']*?href=[\'\"]{}\/{}[\'\"]\/>'.format(min_path[k], name)
+                    replace = "<link rel='stylesheet' href=\"{}/{}.min.css\"/>\n\t<link rel='stylesheet' href=\"{}/{}\"/>".format(min_path[k], html_name.split('.')[-2], min_path[k], name)
 
                 file_php = re.sub(pattern, replace, file_php)
             
@@ -67,8 +72,8 @@ for h in config['files']:
             name = j['name']
 
             if mode == 'prod':     
-                #check if there id changes in dev file
-                dev_time = os.path.getmtime('{}/{}/{}'.format(html_path, dev_path[k], name))
+                #check if there are changes in dev file
+                dev_time = os.path.getmtime('{}/{}/{}'.format(html_path, min_path[k], name))
                 if os.path.isfile('{}/{}/{}.min.{}'.format(html_path, min_path[k], html_name.split('.')[-2], k)):
                     prod_time = os.path.getmtime('{}/{}/{}.min.{}'.format(html_path, min_path[k], html_name.split('.')[-2], k))
                     if dev_time > prod_time:
@@ -76,39 +81,39 @@ for h in config['files']:
                 else:
                     changes[k] = True
 
+                #move files to dev folder
+                from_path = '{}/{}/{}'.format(html_path, min_path[k], name)
+                dest_path = '{}/{}/{}'.format(html_path, dev_path[k], name)
+                os.rename(from_path, dest_path)
+
                 #store js/css files to compile later
                 f = open("{}/{}/{}".format(html_path, dev_path[k], name), 'r')
                 files[k].append(f.read())
                 f.close()
 
-                #erase prod script/link tags in wrong place
-                if k == 'js':
-                    pattern = r'<script[\w\s\=\-\/\"\']*?src=[\'\"]{}\/{}[\'\"][\w\s\=\-\/\"\'>]+?<\/script>'.format(min_path[k], name)
-                else:
-                    pattern = r'<link[\w\s\=\-\/\"\']*?href=[\'\"]{}\/{}[\'\"]\/>'.format(min_path[k], name)
-
-                file_php = re.sub(pattern, '', file_php)
-
                 #erase dev script/link tags
                 if k == 'js':
-                    pattern = r'<script[\w\s\=\-\/\"\']*?src=[\'\"]{}\/{}[\'\"][\w\s\=\-\/\"\'>]+?<\/script>[\s]*'.format(dev_path[k], name)
+                    pattern = r'<script[\w\s\=\-\/\"\']*?src=[\'\"]{}\/{}[\'\"][\w\s\=\-\/\"\'>]+?<\/script>[\s]*'.format(min_path[k], name)
                 else:
-                    pattern = r'<link[\w\s\=\-\/\"\']*?href=[\'\"]{}\/{}[\'\"]\/>[\s]*'.format(dev_path[k], name)
+                    pattern = r'<link[\w\s\=\-\/\"\']*?href=[\'\"]{}\/{}[\'\"]\/>[\s]*'.format(min_path[k], name)
 
                 file_php = re.sub(pattern, '', file_php)
-
 
             if mode == 'dev':
                 #insert dev script/link tags
                 if k == 'js':
                     pattern = r'<script src=\"{}\/{}\.min\.js\"><\/script>'.format(min_path[k], html_name.split('.')[-2])
-                    replace = "<script src=\"{}/{}\"></script>\n\t<script src=\"{}/{}.min.js\"></script>".format(dev_path[k], name, min_path[k], html_name.split('.')[-2])
+                    replace = "<script src=\"{}/{}\"></script>\n\t<script src=\"{}/{}.min.js\"></script>".format(min_path[k], name, min_path[k], html_name.split('.')[-2])
                 else:
                     pattern = r'<link rel=\'stylesheet\' href=\"{}\/{}\.min\.css\"\/>'.format(min_path[k], html_name.split('.')[-2])
-                    replace = "<link rel='stylesheet' href=\"{}/{}\"/>\n\t<link rel='stylesheet' href=\"{}/{}.min.css\"/>".format(dev_path[k], name, min_path[k], html_name.split('.')[-2])
+                    replace = "<link rel='stylesheet' href=\"{}/{}\"/>\n\t<link rel='stylesheet' href=\"{}/{}.min.css\"/>".format(min_path[k], name, min_path[k], html_name.split('.')[-2])
 
                 file_php = re.sub(pattern, replace, file_php)
 
+                #move files to min folder
+                from_path = '{}/{}/{}'.format(html_path, dev_path[k], name)
+                dest_path = '{}/{}/{}'.format(html_path, min_path[k], name)
+                os.rename(from_path, dest_path)
 
 
         if mode == 'dev':
@@ -119,6 +124,11 @@ for h in config['files']:
                 pattern = r'<link rel=\'stylesheet\' href=\"{}\/{}\.min\.css\"\/>'.format(min_path[k], html_name.split('.')[-2])
 
             file_php = re.sub(pattern, '', file_php)
+
+            #move file to dev folder
+            from_path = '{}/{}/{}.min.{}'.format(html_path, min_path[k], html_name.split('.')[-2], k)
+            dest_path = '{}/{}/{}.min.{}'.format(html_path, dev_path[k], html_name.split('.')[-2], k)
+            os.rename(from_path, dest_path)
 
             #normal permission for dev dir
             os.system("chmod 755 {}/{}".format(html_path, dev_path[k]))
