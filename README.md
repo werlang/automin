@@ -35,12 +35,12 @@ Inside dev will be the relative path to **root** where you will place your origi
 
 Here we will put the list of pages Automin will search for. The *name* property will contain the name of the page.
 Inside *js* and *css* there is a porperty named *files*. Inside files you will find a property *name*, containing the name of the script/stylesheet the page has a reference and which you would like Automin to replace.
-Note that you can leave some scripts outside of Automin sight, like CDN links to external libraries. Just dont mention them here and Automin will ignore it.
+Note that you can leave some scripts outside of Automin's sight, like CDN links to external libraries. Just dont mention them here and Automin will ignore it.
 
 ```
 {
     "path": {
-        "root": "/home/server/public_html",
+        "root": "/home/automin/sample",
         "js": {
             "dev": "script/dev",
             "min": "script"
@@ -55,6 +55,7 @@ Note that you can leave some scripts outside of Automin sight, like CDN links to
         "js": {
             "files": [
                 {"name": "index.js"},
+                {"name": "dialog.js"},
                 {"name": "login.js"},
                 {"name": "header.js"}
             ]
@@ -62,23 +63,8 @@ Note that you can leave some scripts outside of Automin sight, like CDN links to
         "css": {
             "files": [
                 {"name": "index.css"},
+                {"name": "dialog.css"},
                 {"name": "header.css"}
-            ]
-        }
-    },{
-        "name": "docs.php",
-        "js": {
-            "files": [
-                {"name": "docs.js"},
-                {"name": "side-menu.js"},
-                {"name": "header.js"}
-            ]
-        },
-        "css": {
-            "files": [
-                {"name": "docs.css"},
-                {"name": "header.css"},
-                {"name": "code.css"},
             ]
         }
     }]
@@ -98,7 +84,7 @@ or
 python automin.py prod
 ```
 
-By calling the **dev** argument, Automin will look for your page, remove all tags referencing files with .min.js and .min.css extension (included in automin_config.json) in the js/min and css/min folders, and replace with the files from js/dev and css/dev folders.
+By calling the **dev** argument, Automin will look for your page, remove all tags referencing files with .min.js and .min.css extension (included in automin_config.json) in the js/min and css/min folders, and replace with the names of the files from js/dev and css/dev folders. Those files in devs folder are then moved to min folder and vice-versa.
 
 ### Example
 
@@ -133,19 +119,21 @@ And I am using the `automin_config.json` provided in the samples, the same page 
 	
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css"/>
 	
-	<link rel='stylesheet' href="css/dev/index.css"/>
-	<link rel='stylesheet' href="css/dev/header.css"/>
+	<link rel='stylesheet' href="css/index.css"/>
+	<link rel='stylesheet' href="css/dialog.css"/>
+	<link rel='stylesheet' href="css/header.css"/>
 	
 	<script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
 	<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.min.js'></script>
 	
-	<script src="script/dev/index.js"></script>
-	<script src="script/dev/login.js"></script>
-	<script src="script/dev/header.js"></script>
+	<script src="script/index.js"></script>
+	<script src="script/dialog.js"></script>
+	<script src="script/login.js"></script>
+	<script src="script/header.js"></script>
 </head>
 ```
 
-So, if your original files are inside js/dev and css/dev they can now be directly edited and your page will link them. You can see the result of the changes you make on those files just refreshing your browser.
+So, if your original files were inside js/dev and css/dev they are now moved to js/min and css/min while those minified files are moved to js/dev and css/dev. The page referencing those files is updated to reference the dev files. You can see the result of the changes you make just refreshing your browser.
 
 ## Bundling and Minifying
 
@@ -159,7 +147,7 @@ Even if a single file in the list was updated, Automin need to remake the entire
 
 ### Example
 
-For example, if only `login.js` was modified, when **prod ** argument is called, Automin will take `index.js`, `login.js` and `header.js` to create a new single file, `index.min.js`. This new file will contain the compressed version of those three files.
+For example, if only `login.js` was modified, when **prod ** argument is called, Automin will take `index.js`, `login.js`, `dialog.js` and `header.js` to create a new single file, `index.min.js`. This new file will contain the compressed version of those four files.
 
 So after the call, our page, `index.php`, will look like:
 
@@ -179,7 +167,7 @@ So after the call, our page, `index.php`, will look like:
 </head>
 ```
 
-After all that, Automin will change the permission of the dev folders (js and css) to 000, making any files inside it unreachable to the website users. It is the way Automin ensures your dev folder is protected, and is only reached when the server is in dev mode.
+After all that, Automin will change the permission of the dev folders (js and css) to 000, protecting your files and making them it unreachable to the website users.
 
 ## External APIs
 
@@ -194,7 +182,3 @@ Enjoy!
 ## Author
 Pablo Werlang - [pswerlang@gmail.com](mailto:pswerlang@gmail.com)
 Check out my other project, [gladCode](https://gladcode.tk) (in Portuguese).
-
-## Known Issues
-
-- Relative paths inside js and css files are kept when changing modes. So, if your dev/prod folders are in a different level of the directory structure, there will be a problem when switching modes.

@@ -130,8 +130,6 @@ for h in config['files']:
             dest_path = '{}/{}/{}.min.{}'.format(html_path, dev_path[k], html_name.split('.')[-2], k)
             os.rename(from_path, dest_path)
 
-            #normal permission for dev dir
-            os.system("chmod 755 {}/{}".format(html_path, dev_path[k]))
 
 
     if mode == 'prod':
