@@ -44,7 +44,8 @@ for h in config['files']:
             #move file to min folder
             from_path = '{}/{}/{}.min.{}'.format(html_path, dev_path[k], html_name.split('.')[-2], k)
             dest_path = '{}/{}/{}.min.{}'.format(html_path, min_path[k], html_name.split('.')[-2], k)
-            os.rename(from_path, dest_path)
+            if os.path.isfile(from_path):
+                os.rename(from_path, dest_path)
 
             #insert prod script/link tag if does not exist
             if k == 'js':
@@ -73,7 +74,10 @@ for h in config['files']:
 
             if mode == 'prod':     
                 #check if there are changes in dev file
-                dev_time = os.path.getmtime('{}/{}/{}'.format(html_path, min_path[k], name))
+                from_path = '{}/{}/{}'.format(html_path, min_path[k], name)
+                if not os.path.isfile(from_path):
+                    from_path = '{}/{}/{}'.format(html_path, dev_path[k], name)
+                dev_time = os.path.getmtime(from_path)
                 if os.path.isfile('{}/{}/{}.min.{}'.format(html_path, min_path[k], html_name.split('.')[-2], k)):
                     prod_time = os.path.getmtime('{}/{}/{}.min.{}'.format(html_path, min_path[k], html_name.split('.')[-2], k))
                     if dev_time > prod_time:
@@ -84,7 +88,8 @@ for h in config['files']:
                 #move files to dev folder
                 from_path = '{}/{}/{}'.format(html_path, min_path[k], name)
                 dest_path = '{}/{}/{}'.format(html_path, dev_path[k], name)
-                os.rename(from_path, dest_path)
+                if os.path.isfile(from_path):
+                    os.rename(from_path, dest_path)
 
                 #store js/css files to compile later
                 f = open("{}/{}/{}".format(html_path, dev_path[k], name), 'r')
@@ -113,7 +118,8 @@ for h in config['files']:
                 #move files to min folder
                 from_path = '{}/{}/{}'.format(html_path, dev_path[k], name)
                 dest_path = '{}/{}/{}'.format(html_path, min_path[k], name)
-                os.rename(from_path, dest_path)
+                if os.path.isfile(from_path):
+                    os.rename(from_path, dest_path)
 
 
         if mode == 'dev':
@@ -128,7 +134,8 @@ for h in config['files']:
             #move file to dev folder
             from_path = '{}/{}/{}.min.{}'.format(html_path, min_path[k], html_name.split('.')[-2], k)
             dest_path = '{}/{}/{}.min.{}'.format(html_path, dev_path[k], html_name.split('.')[-2], k)
-            os.rename(from_path, dest_path)
+            if os.path.isfile(from_path):        
+                os.rename(from_path, dest_path)
 
 
 
