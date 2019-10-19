@@ -194,3 +194,7 @@ Enjoy!
 ## Author
 Pablo Werlang - [pswerlang@gmail.com](mailto:pswerlang@gmail.com)
 Check out my other project, [gladCode](https://gladcode.tk) (in Portuguese).
+
+## Known Issues
+
+- Relative paths inside js and css files are kept when changing modes. So, if your dev/prod folders are in a different level of the directory structure, there will be a problem when switching modes.
