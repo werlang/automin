@@ -5,8 +5,7 @@ import httplib, urllib, sys, json, re, os, requests
 mode = sys.argv[1]
 
 #load config from file
-#f = open('closure_config.json', 'r')
-f = open('closure_test.json', 'r')
+f = open('automin_config.json', 'r')
 config = json.loads(f.read())
 f.close()
 

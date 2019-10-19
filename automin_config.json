@@ -1,12 +1,12 @@
 {
     "path": {
-        "root": "/home/server/public_html",
+        "root": "/home/gladcode/public_html",
         "js": {
-            "dev": "script/dev",
+            "dev": "scriptdev",
             "min": "script"
         },
         "css": {
-            "dev": "css/dev",
+            "dev": "cssdev",
             "min": "css"
         }
     },
@@ -15,13 +15,15 @@
         "js": {
             "files": [
                 {"name": "index.js"},
-                {"name": "login.js"},
+                {"name": "dialog.js"},
+                {"name": "googlelogin.js"},
                 {"name": "header.js"}
             ]
         },
         "css": {
             "files": [
                 {"name": "index.css"},
+                {"name": "dialog.css"},
                 {"name": "header.css"}
             ]
         }
@@ -31,15 +33,38 @@
             "files": [
                 {"name": "docs.js"},
                 {"name": "side-menu.js"},
+                {"name": "googlelogin.js"},
                 {"name": "header.js"}
             ]
         },
         "css": {
             "files": [
+                {"name": "table.css"},
                 {"name": "docs.css"},
-                {"name": "header.css"},
-                {"name": "code.css"},
+                {"name": "side-menu.css"},
+                {"name": "header.css"}
             ]
         }
+    },{
+        "name": "manual.php",
+        "js": {
+            "files": [
+                {"name": "docs.js"},
+                {"name": "side-menu.js"},
+                {"name": "googlelogin.js"},
+                {"name": "header.js"},
+                {"name": "prism.js"}
+            ]
+        },
+        "css": {
+            "files": [
+                {"name": "table.css"},
+                {"name": "manual.css"},
+                {"name": "side-menu.css"},
+                {"name": "prism.css"},
+                {"name": "header.css"}
+            ]
+        }
+
     }]
 }
